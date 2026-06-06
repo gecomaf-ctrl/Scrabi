@@ -67,7 +67,7 @@ export default function Home() {
             isMatchStarted
               ? theme === "dark"
                 ? "bg-slate-900/80 border-emerald-500/30 hover:border-emerald-500/50 hover:bg-slate-900 cursor-pointer hover:scale-[1.01]"
-                : "bg-white border-emerald-555/35 hover:border-emerald-500 hover:shadow-lg hover:shadow-slate-200/50 cursor-pointer hover:scale-[1.01]"
+                : "bg-white border-emerald-500/35 hover:border-emerald-500 hover:shadow-lg hover:shadow-slate-200/50 cursor-pointer hover:scale-[1.01]"
               : "opacity-60 bg-slate-500/5 border-slate-500/10 cursor-not-allowed"
           }`}
         >

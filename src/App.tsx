@@ -5,7 +5,7 @@
 
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import { MatchProvider } from "./context/MatchContext";
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import { HashRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { Sparkles, Home as HomeIcon, Trophy, RotateCw, BarChart3 } from "lucide-react";
 import ThemeToggle from "./components/ThemeToggle";
 import Home from "./pages/Home";
@@ -168,9 +168,9 @@ export default function App() {
   return (
     <ThemeProvider>
       <MatchProvider>
-        <BrowserRouter>
+        <HashRouter>
           <Shell />
-        </BrowserRouter>
+        </HashRouter>
       </MatchProvider>
     </ThemeProvider>
   );

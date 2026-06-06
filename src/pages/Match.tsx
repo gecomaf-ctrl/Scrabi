@@ -283,6 +283,7 @@ export default function Match() {
   // Selection states for starting next match
   const [p1Selection, setP1Selection] = useState("");
   const [p2Selection, setP2Selection] = useState("");
+  const [launchError, setLaunchError] = useState<string | null>(null);
   
   // Track if winner stays in final match workflow
   const [winnerStays, setWinnerStays] = useState<boolean | null>(null);
@@ -303,6 +304,7 @@ export default function Match() {
   // Adjust Player 2 selection automatically when Player 1 is changed to prevent selection duplication
   const handleP1Change = (name: string) => {
     setP1Selection(name);
+    setLaunchError(null);
     if (name === p2Selection) {
       const filtered = registeredPlayers.filter(p => p !== name);
       if (filtered.length > 0) {
@@ -351,15 +353,16 @@ export default function Match() {
     }
 
     if (!player1 || !player2) {
-      alert("Veuillez sélectionner les deux joueurs !");
+      setLaunchError("Veuillez sélectionner les deux joueurs !");
       return;
     }
 
     if (player1 === player2) {
-      alert("Veuillez choisir deux joueurs différents !");
+      setLaunchError("Veuillez choisir deux joueurs différents !");
       return;
     }
 
+    setLaunchError(null);
     startNewMatch(player1, player2);
     // Reset local state
     setWinnerStays(null);
@@ -638,6 +641,11 @@ export default function Match() {
                     Lancer le Match 🏆
                   </button>
                 </div>
+                {launchError && (
+                  <p className="text-red-500 font-mono text-[11px] tracking-tight text-center mt-2 animate-pulse">
+                    ⚠️ {launchError}
+                  </p>
+                )}
               </form>
             )}
           </div>
@@ -702,6 +710,11 @@ export default function Match() {
                 Démarrer le Match 🏁
               </button>
             </div>
+            {launchError && (
+              <p className="text-red-500 font-mono text-[11px] tracking-tight text-center mt-2.5 animate-pulse">
+                ⚠️ {launchError}
+              </p>
+            )}
           </form>
         </div>
 

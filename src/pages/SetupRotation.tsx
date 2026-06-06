@@ -25,13 +25,19 @@ export default function SetupRotation() {
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
 
-  const spectatorUrl = activeGbolo ? `${window.location.origin}/live/${activeGbolo.id}` : "";
+  // Inline Validation & Error states
+  const [liveError, setLiveError] = useState<string | null>(null);
+  const [registerError, setRegisterError] = useState<string | null>(null);
+  const [matchStartError, setMatchStartError] = useState<string | null>(null);
+
+  const spectatorUrl = activeGbolo ? `${window.location.origin}/#/live/${activeGbolo.id}` : "";
 
   const handleCreateGbolo = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = gboloNom.trim();
     if (!trimmed) return;
     setCreating(true);
+    setLiveError(null);
     try {
       const res = await createGbolo(trimmed);
       setActiveGbolo(res);
@@ -40,7 +46,7 @@ export default function SetupRotation() {
       setActiveMatchId(initialMatchId);
     } catch (err) {
       console.error("Failed to generate Gbôlô live stream", err);
-      alert("Impossible d'activer le Gbôlô live. Veuillez vérifier votre connexion.");
+      setLiveError("Impossible d'activer le Gbôlô live. Veuillez vérifier votre connexion.");
     } finally {
       setCreating(false);
     }
@@ -54,14 +60,13 @@ export default function SetupRotation() {
   };
 
   // Add a player to the registered pool
-
-  // Add a player to the registered pool
   const handleAddPlayer = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = newPlayerName.trim();
     if (!trimmed) return;
+    setRegisterError(null);
     if (registeredPlayers.includes(trimmed)) {
-      alert("Ce pseudo de joueur existe déjà dans la liste !");
+      setRegisterError("Ce pseudo de joueur existe déjà dans la liste !");
       return;
     }
     setRegisteredPlayers([...registeredPlayers, trimmed]);
@@ -140,7 +145,10 @@ export default function SetupRotation() {
               <input
                 type="text"
                 value={gboloNom}
-                onChange={(e) => setGboloNom(e.target.value)}
+                onChange={(e) => {
+                  setGboloNom(e.target.value);
+                  if (liveError) setLiveError(null);
+                }}
                 placeholder="Nom convivial de votre Gbôlô"
                 required
                 className={`flex-1 p-2 sm:p-2.5 rounded-xl border font-sans text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all ${
@@ -157,6 +165,11 @@ export default function SetupRotation() {
                 {creating ? "Génération..." : "Activer la Diffusion Live 📡"}
               </button>
             </div>
+            {liveError && (
+              <p className="text-red-500 font-mono text-[11px] tracking-tight animate-pulse mt-1.5">
+                ⚠️ {liveError}
+              </p>
+            )}
           </form>
         ) : (
           /* LIVE STATUS: Active codes, shares and QR Code generator */
@@ -293,26 +306,36 @@ export default function SetupRotation() {
         </div>
 
         {/* Add a player mini-form */}
-        <form onSubmit={handleAddPlayer} className="flex gap-2" id="add-player-form">
-          <input
-            type="text"
-            value={newPlayerName}
-            onChange={(e) => setNewPlayerName(e.target.value)}
-            placeholder="Ex: Maître Des Mots"
-            className={`flex-1 p-2 sm:p-2.5 rounded-xl border font-sans text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all ${
-              theme === "dark"
-                ? "bg-slate-950 border-slate-800 text-white placeholder-slate-650"
-                : "bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-404"
-            }`}
-          />
-          <button
-            type="submit"
-            id="register-player-submit"
-            className="py-2 sm:py-2.5 px-3.5 sm:px-4 bg-orange-500 text-white font-medium rounded-xl text-[11px] sm:text-xs font-display flex items-center gap-1 hover:bg-orange-600 active:scale-95 transition-all cursor-pointer shadow-md shadow-orange-500/10 shrink-0"
-          >
-            <Plus className="h-3.5 w-3.5" /> <span className="hidden xs:inline">Inscrire</span>
-          </button>
-        </form>
+        <div className="space-y-1.5">
+          <form onSubmit={handleAddPlayer} className="flex gap-2" id="add-player-form">
+            <input
+              type="text"
+              value={newPlayerName}
+              onChange={(e) => {
+                setNewPlayerName(e.target.value);
+                if (registerError) setRegisterError(null);
+              }}
+              placeholder="Ex: Maître Des Mots"
+              className={`flex-1 p-2 sm:p-2.5 rounded-xl border font-sans text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all ${
+                theme === "dark"
+                  ? "bg-slate-950 border-slate-800 text-white placeholder-slate-650"
+                  : "bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-404"
+              }`}
+            />
+            <button
+              type="submit"
+              id="register-player-submit"
+              className="py-2 sm:py-2.5 px-3.5 sm:px-4 bg-orange-500 text-white font-medium rounded-xl text-[11px] sm:text-xs font-display flex items-center gap-1 hover:bg-orange-600 active:scale-95 transition-all cursor-pointer shadow-md shadow-orange-500/10 shrink-0"
+            >
+              <Plus className="h-3.5 w-3.5" /> <span className="hidden xs:inline">Inscrire</span>
+            </button>
+          </form>
+          {registerError && (
+            <p className="text-red-500 font-mono text-[10.5px] tracking-tight animate-pulse mt-0.5">
+              ⚠️ {registerError}
+            </p>
+          )}
+        </div>
 
         {/* Render Players stream */}
         <div className="space-y-2 max-h-[350px] overflow-y-auto pr-1" id="players-list-container">
@@ -350,15 +373,23 @@ export default function SetupRotation() {
       </div>
 
       {/* Button to match preparation */}
-      <div className="flex justify-end pt-2">
+      <div className="flex flex-col sm:flex-row items-end sm:items-center justify-between gap-3 pt-2">
+        <div className="flex-1">
+          {matchStartError && (
+            <p className="text-red-500 font-mono text-xs tracking-tight animate-pulse py-1">
+              ⚠️ {matchStartError}
+            </p>
+          )}
+        </div>
         <button
           type="button"
           id="go-to-match-button"
           onClick={() => {
             if (registeredPlayers.length < 2) {
-              alert("Il faut au moins 2 joueurs inscrits pour pouvoir démarrer un match !");
+              setMatchStartError("Il faut au moins 2 joueurs inscrits pour pouvoir démarrer un match ! Inscrivez-les ci-dessus.");
               return;
             }
+            setMatchStartError(null);
             navigate("/match");
           }}
           className="w-full sm:w-auto py-3 px-6 font-semibold font-display text-xs sm:text-sm rounded-xl cursor-pointer transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:scale-[1.01] text-white shadow-md shadow-orange-500/20 font-bold"
