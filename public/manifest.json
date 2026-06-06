@@ -1,0 +1,28 @@
+{
+  "name": "Scrabble Arena",
+  "short_name": "Scrabble Arena",
+  "description": "Application d'arbitrage professionnelle pour le Scrabble physique avec gestion de duels et rotations ROI.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#f59e0b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/factsimulator/image/upload/v1779496138/file_00000000fa6071f5837035fdc52dde7f_pu7se4.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://res.cloudinary.com/factsimulator/image/upload/v1779496138/file_00000000fa6071f5837035fdc52dde7f_pu7se4.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "https://res.cloudinary.com/factsimulator/image/upload/v1779496138/file_00000000fa6071f5837035fdc52dde7f_pu7se4.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

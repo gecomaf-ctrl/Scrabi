@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Gbolo": {
+      "title": "Gbolo",
+      "description": "Session Gbôlô de club avec code d'accès public",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nom": { "type": "string" },
+        "code_public": { "type": "string" },
+        "statut": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "nom", "code_public", "statut"]
+    },
+    "MatchGbolo": {
+      "title": "MatchGbolo",
+      "description": "Match individuel au sein d'une session Gbôlô arbitré et diffusé en direct",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "gbolo_id": { "type": "string" },
+        "joueur1": { "type": "string" },
+        "joueur2": { "type": "string" },
+        "score1": { "type": "number" },
+        "score2": { "type": "number" },
+        "statut": { "type": "string", "enum": ["en_attente", "en_cours", "termine"] },
+        "board": { "type": "array" },
+        "history": { "type": "array" },
+        "activePlayerIndex": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "gbolo_id", "joueur1", "joueur2", "score1", "score2", "statut"]
+    }
+  },
+  "firestore": {
+    "/gbolos/{gboloId}": {
+      "schema": "Gbolo",
+      "description": "Collection des sessions de Gbôlô"
+    },
+    "/matchs/{matchId}": {
+      "schema": "MatchGbolo",
+      "description": "Collection de tous les matchs rattachés à des Gbôlôs"
+    }
+  }
+}

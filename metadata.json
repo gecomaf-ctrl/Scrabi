@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Remix: Remix: Scrabble Arena",
+  "description": "Application d\u0027arbitrage professionnelle pour le Scrabble physique avec gestion de duels et rotations ROI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Fallback block
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Core verification primitives
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // validation helpers
+    function isValidBaseGbolo(data) {
+      return data.id is string && data.id.size() <= 64
+        && data.nom is string && data.nom.size() <= 200
+        && data.code_public is string && data.code_public.size() <= 50
+        && data.statut is string && data.statut.size() <= 50
+        && data.creatorId is string && data.creatorId.size() <= 128;
+    }
+
+    function isValidBaseMatch(data) {
+      return data.id is string && data.id.size() <= 64
+        && data.gbolo_id is string && data.gbolo_id.size() <= 64
+        && data.joueur1 is string && data.joueur1.size() <= 120
+        && data.joueur2 is string && data.joueur2.size() <= 120
+        && (data.score1 is int || data.score1 is float)
+        && (data.score2 is int || data.score2 is float)
+        && data.statut is string && data.statut.size() <= 50;
+    }
+
+    // Gbolos
+    match /gbolos/{gboloId} {
+      allow get, list: if true;
+
+      allow create: if isValidId(gboloId)
+        && incoming().id == gboloId
+        && isValidBaseGbolo(incoming());
+
+      allow update: if isValidId(gboloId)
+        && incoming().id == gboloId
+        && isValidBaseGbolo(incoming())
+        && existing().creatorId == incoming().creatorId;
+    }
+
+    // Matchs (Matches played under a Gbolo)
+    match /matchs/{matchId} {
+      allow get, list: if true;
+
+      allow create: if isValidId(matchId)
+        && incoming().id == matchId
+        && isValidBaseMatch(incoming())
+        && get(/databases/$(database)/documents/gbolos/$(incoming().gbolo_id)).data.creatorId == incoming().creatorId;
+
+      allow update: if isValidId(matchId)
+        && incoming().id == matchId
+        && isValidBaseMatch(incoming())
+        && incoming().gbolo_id == existing().gbolo_id
+        && get(/databases/$(database)/documents/gbolos/$(existing().gbolo_id)).data.creatorId == incoming().creatorId;
+    }
+  }
+}

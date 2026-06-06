@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Custom dark mode background styles as global helper */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
