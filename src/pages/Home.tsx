@@ -2,6 +2,7 @@ import { useTheme } from "../context/ThemeContext";
 import { useMatch } from "../context/MatchContext";
 import { RotateCw, Trophy, Crown, Play, BarChart3, Users, ChevronRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import InstallButton from "../components/InstallButton";
 
 export default function Home() {
   const { theme } = useTheme();
@@ -31,6 +32,9 @@ export default function Home() {
       {/* Primary Navigation Cards */}
       <div className="flex flex-col gap-3.5 sm:gap-4 px-1 sm:px-0">
         
+        {/* Banner de téléchargement Web App / PWA */}
+        <InstallButton variant="banner" />
+
         {/* Card 1: Organiser Gbôlô */}
         <Link
           to="/gestion-joueurs"

@@ -8,6 +8,7 @@ import { MatchProvider } from "./context/MatchContext";
 import { HashRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { Sparkles, Home as HomeIcon, Trophy, RotateCw, BarChart3 } from "lucide-react";
 import ThemeToggle from "./components/ThemeToggle";
+import InstallButton from "./components/InstallButton";
 import Home from "./pages/Home";
 import SetupRotation from "./pages/SetupRotation";
 import Match from "./pages/Match";
@@ -97,6 +98,7 @@ function Shell() {
 
           {/* Action toggle placeholder */}
           <div className="flex items-center gap-2">
+            <InstallButton variant="header" />
             <ThemeToggle />
           </div>
         </div>
